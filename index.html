@@ -92,11 +92,14 @@ iframe {
 
 <script>
 const music = document.getElementById("music");
+let started = false;
 
-// try autoplay silently
+// try autoplay muted
 music.play().catch(() => {});
 
 function startMusic() {
+  if (started) return;
+
   music.muted = false;
   music.volume = 0;
 
@@ -110,14 +113,14 @@ function startMusic() {
     }, 200);
   });
 
-  window.removeEventListener("scroll", startMusic);
+  started = true;
 }
 
-// trigger on scroll
-window.addEventListener("scroll", startMusic);
-
-// ALSO trigger on touch (for mobile safety)
+// trigger on EVERYTHING possible
+window.addEventListener("click", startMusic);
 window.addEventListener("touchstart", startMusic);
+window.addEventListener("scroll", startMusic);
+window.addEventListener("keydown", startMusic);
 </script>
 
 <!-- ✨ PARTICLES -->
