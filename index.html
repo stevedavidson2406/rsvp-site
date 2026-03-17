@@ -18,26 +18,54 @@ body {
   overflow-x: hidden;
 }
 
-h1 {
-  font-family: 'Tangerine', cursive;
-  font-size: 80px;
-  color: #c4a974;
-  margin: 10px 0;
+/* INTRO SCREEN */
+#intro {
+  position: fixed;
+  inset: 0;
+  background: #f5f3ef;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1s ease;
 }
 
-.gold { color: #c4a974; }
+#intro h1 {
+  font-family: 'Tangerine', cursive;
+  font-size: 60px;
+  color: #c4a974;
+}
 
+#intro button {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: 1px solid #c4a974;
+  background: transparent;
+  color: #c4a974;
+  letter-spacing: 2px;
+}
+
+/* MAIN SITE */
 .container {
   max-width: 700px;
   margin: auto;
   padding: 40px 20px;
+  display: none;
 }
+
+h1 {
+  font-family: 'Tangerine', cursive;
+  font-size: 80px;
+  color: #c4a974;
+}
+
+.gold { color: #c4a974; }
 
 .box {
   border: 1px solid rgba(196,169,116,0.3);
   padding: 30px;
   margin: 40px 0;
-  background: rgba(196,169,116,0.05);
 }
 
 input, select {
@@ -46,33 +74,30 @@ input, select {
   margin-top: 8px;
   margin-bottom: 20px;
   border: 1px solid rgba(196,169,116,0.4);
-  background: transparent;
 }
 
-button {
+button.main-btn {
   background: #c4a974;
   color: white;
   border: none;
   padding: 14px;
   width: 100%;
-  letter-spacing: 2px;
 }
 
 iframe {
   width: 100%;
   height: 300px;
   border: none;
-  margin-top: 20px;
 }
 
-/* particles */
+/* PARTICLES */
 .particle {
   position: fixed;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: #c4a974;
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: 0.4;
   animation: float 10s infinite linear;
 }
 
@@ -85,56 +110,19 @@ iframe {
 
 <body>
 
-<!-- 🎶 MUSIC -->
-<audio id="music" autoplay loop muted>
+<!-- 🎵 MUSIC -->
+<audio id="music" loop>
   <source src="music.mp3" type="audio/mp3">
 </audio>
 
-<script>
-const music = document.getElementById("music");
-let started = false;
+<!-- 🌟 INTRO SCREEN -->
+<div id="intro">
+  <h1>Parvez & Mehzabin</h1>
+  <button onclick="startExperience()">Begin</button>
+</div>
 
-// try autoplay muted
-music.play().catch(() => {});
-
-function startMusic() {
-  if (started) return;
-
-  music.muted = false;
-  music.volume = 0;
-
-  music.play().then(() => {
-    let fade = setInterval(() => {
-      if (music.volume < 0.3) {
-        music.volume += 0.02;
-      } else {
-        clearInterval(fade);
-      }
-    }, 200);
-  });
-
-  started = true;
-}
-
-// trigger on EVERYTHING possible
-window.addEventListener("click", startMusic);
-window.addEventListener("touchstart", startMusic);
-window.addEventListener("scroll", startMusic);
-window.addEventListener("keydown", startMusic);
-</script>
-
-<!-- ✨ PARTICLES -->
-<script>
-for (let i = 0; i < 25; i++) {
-  let p = document.createElement("div");
-  p.className = "particle";
-  p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDuration = (5 + Math.random()*10) + "s";
-  document.body.appendChild(p);
-}
-</script>
-
-<div class="container">
+<!-- MAIN CONTENT -->
+<div class="container" id="mainContent">
 
 <p class="gold">Together with their families,</p>
 
@@ -155,41 +143,53 @@ as they embark on their journey of love and forever
   <p><b>RK9 Villa and Resort</b><br>Bilwaradahalli, 560083</p>
 </div>
 
-<!-- 📍 MAP -->
 <iframe src="https://maps.google.com/maps?q=RK9%20Villa%20and%20Resort&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
 
-<!-- 📝 FORM -->
 <div class="box">
-<form action="https://docs.google.com/forms/d/e/1FAIpQLSdb3OiwxA4AonvLqZ7FmFktpQPoI0D1DZlnYiCaJ_eky5L3jg/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSdb3OiwxA4AonvLqZ7FmFktpQPoI0D1DZlnYiCaJ_eky5L3jg/formResponse" method="POST" target="hidden_iframe">
 
 <label>Full Name *</label>
 <input type="text" name="entry.1595813428" required>
 
 <label>Will you attend? *</label>
 <select name="entry.1117028700" required>
-<option value="">Select an option</option>
+<option value="">Select</option>
 <option value="Joyfully Accept">Joyfully Accept</option>
 <option value="Regretfully Decline">Regretfully Decline</option>
 </select>
 
-<button type="submit">SEND RSVP</button>
-
+<button class="main-btn">SEND RSVP</button>
 </form>
 
 <iframe name="hidden_iframe" style="display:none;"></iframe>
-
-<p id="success" style="display:none; color:green;">Thank you! Your response is recorded.</p>
 </div>
 
 </div>
 
+<!-- SCRIPT -->
 <script>
-var submitted = false;
-document.querySelector("form").addEventListener("submit", function() {
+function startExperience() {
+  const music = document.getElementById("music");
+
+  music.volume = 0.3;
+  music.play();
+
+  document.getElementById("intro").style.opacity = "0";
+
   setTimeout(() => {
-    document.getElementById("success").style.display = "block";
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
   }, 1000);
-});
+}
+
+// particles
+for (let i = 0; i < 25; i++) {
+  let p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.animationDuration = (5 + Math.random()*10) + "s";
+  document.body.appendChild(p);
+}
 </script>
 
 </body>
